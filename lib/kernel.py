@@ -44,6 +44,7 @@ KERNEL_STATUS_KEY = "helium_kernel_status"
 HELIUM_OBJECT_INSPECT_PANEL = "helium_object_inspect"
 
 ANSI_ESCAPE_PATTERN = re.compile(r"\x1b[^m]*m")
+DOLLAR_REGEX = re.compile(r"(?<!\\)\$")
 
 OUTPUT_VIEW_SEPARATOR = "-" * 80
 
@@ -92,6 +93,14 @@ def extract_content(messages, msg_type):
 
 def remove_ansi_escape(text: str):
     return ANSI_ESCAPE_PATTERN.sub("", text)
+
+
+# Dollar sign have meanings in ST completions but not in Jupyter
+# We must therefore escape them
+def escape_dollar_signs(string):
+    """Escape any dollar sign present in string"""
+    return DOLLAR_REGEX.sub(r'\\$', string)
+
 
 
 def get_msg_type(message):
@@ -629,14 +638,14 @@ class KernelConnection(object):
                         + (
                             "<no type info>" if match["type"] is None else match["type"]
                         ),
-                        match["text"],
+                        escape_dollar_signs(match["text"]),
                     )
                     for match in recv_content["metadata"]["_jupyter_types_experimental"]
                 ]
             else:
                 # Just say the completion is came from this plugin, otherwise.
                 return [
-                    (match + "\tHelium", match) for match in recv_content["matches"]
+                    (match + "\tHelium", escape_dollar_signs(match)) for match in recv_content["matches"]
                 ]
         except Empty:
             self._logger.info("Completion timeout.")
