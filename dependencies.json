@@ -4,8 +4,7 @@
 			"dateutil",
 			"enum",
 			"python-six",
-			"pyzmq",
-			"tornado"
+			"pyzmq"
 		],
 		">=4000": [
 			"dateutil",
