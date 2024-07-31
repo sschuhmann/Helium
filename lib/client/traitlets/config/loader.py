@@ -669,7 +669,7 @@ class KeyValueConfigLoader(CommandLineConfigLoader):
 
             elif flag_pattern.match(raw):
                 if item in flags:
-                    cfg,help = flags[item]
+                    cfg,_ = flags[item]
                     self._load_flag(cfg)
                 else:
                     raise ArgumentError("Unrecognized flag: '%s'"%raw)
