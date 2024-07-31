@@ -542,7 +542,7 @@ kv_pattern = re.compile(r'\-\-[A-Za-z][\w\-]*(\.[\w\-]+)*\=.*')
 # rejects:  --anything=anything
 #           --two.word
 
-flag_pattern = re.compile(r'\-\-?\w+[\-\w]*$')
+flag_pattern = re.compile(r'\-\-?\w[\-\w]*$')
 
 class KeyValueConfigLoader(CommandLineConfigLoader):
     """A config loader that loads key value pairs from the command line.
