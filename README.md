@@ -1,8 +1,8 @@
-Helium package for Sublime Text 3
+Helium package for Sublime Text
 ===
 
-Helium is a package for Sublime Text 3, which provides in-editor code execution and autocomplete in interaction with Jupyter kernels.
-The concept of an editor extension communicating Jupyter kernels is inspired by @nteract's splendid Atom package [Hydrogen](https://github.com/nteract/Hydrogen). I want something like it in Sublime Text 3, too.
+Helium is a package for Sublime Text, which provides in-editor code execution and autocomplete in interaction with Jupyter kernels.
+The concept of an editor extension communicating Jupyter kernels is inspired by @nteract's splendid Atom package [Hydrogen](https://github.com/nteract/Hydrogen). I want something like it in Sublime Text, too.
 
 Any feedback is highly welcome. I hope this package will help your life with ST3!
 
