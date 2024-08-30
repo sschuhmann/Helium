@@ -350,7 +350,8 @@ class KernelConnection(object):
         current_view = sublime.active_window().active_view()
         sublime.active_window().focus_view(view)
         view.set_scratch(True)  # avoids prompting to save
-        view.settings().set("word_wrap", "false")
+        view.settings().set("gutter", False)
+        view.settings().set("line_numbers", False)
         sublime.active_window().focus_view(current_view)
 
     def _output_input_code(self, code, execution_count):
@@ -578,6 +579,8 @@ class KernelConnection(object):
             view = window.new_file()
             view.set_name(view_name)
             view.settings().set("syntax", "Packages/Helium/Helium.sublime-syntax")
+            view.settings().set("gutter", False)
+            view.settings().set("line_numbers", False)
             num_group = window.num_groups()
             if num_group != 1:
                 if active_group + 1 < num_group:
