@@ -320,20 +320,21 @@ class KernelConnection(object):
     @property
     def view_name(self):
         """Return name of output view."""
-        return "*Helium Output* {repr}".format(repr=self.repr)
+        return "Helium: {repr}".format(repr=self.repr)
 
     @property
     def repr(self):
         """Return string representation of the connection."""
+        shortened_kernel_id = str(self.kernel_id)[:6]
         if self.connection_name:
             return "{connection_name} ([{lang}] {kernel_id})".format(
                 connection_name=self.connection_name,
                 lang=self.lang,
-                kernel_id=self.kernel_id,
+                kernel_id=shortened_kernel_id,
             )
         else:
             return "[{lang}] {kernel_id}".format(
-                lang=self.lang, kernel_id=self.kernel_id
+                lang=self.lang, kernel_id=shortened_kernel_id
             )
 
     @property
