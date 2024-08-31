@@ -327,17 +327,6 @@ def _start_kernel(window, view, continue_cb=lambda: None, *, logger=HELIUM_LOGGE
 
     continue_cb()
 
-def get_parent_view(view) -> sublime.View:
-    # FIXME: This method pops up dead kernel view on a command palette call.
-    for view in sublime.active_window().views():
-        try:
-            kernel = ViewManager.get_kernel_for_view(view.buffer_id())
-        except KeyError:
-            continue
-
-        if kernel.get_view() == view:
-            return view
-    return None
 
 class HeliumStartKernel(TextCommand):
     """Start a kernel and connect view to it."""
@@ -611,8 +600,8 @@ class HeliumShutdownKernel(TextCommand):
         try:
             kernel = ViewManager.get_kernel_for_view(self.view.buffer_id())
         except KeyError:
-            parent_view = get_parent_view(self.view)
-        return parent_view is not None
+            return False
+        return HeliumKernelManager.get_kernel(kernel.kernel_id).is_alive()
 
     def is_visible(self, *, logger=HELIUM_LOGGER):
         return self.is_enabled()
@@ -690,6 +679,7 @@ def get_line(view: sublime.View, row: int) -> str:
 def get_indent(view: sublime.View, row: int) -> str:
     line = get_line(view, row)
     return INDENT_PATTERN.match(line).group()
+
 
 def get_block(view: sublime.View, s: sublime.Region) -> (str, sublime.Region):
     """Get the code block under the cursor.
@@ -826,7 +816,7 @@ class HeliumClearAllCells(TextCommand):
         except KeyError:
             # if view doesn't have an attached kernel, check if view was created by
             # kernel
-            parent_view = get_parent_view(self.view)
+            parent_view = self._get_parent_view()
             return parent_view is not None
 
     def is_visible(self, *, logger=HELIUM_LOGGER):
@@ -837,7 +827,7 @@ class HeliumClearAllCells(TextCommand):
         try:
             kernel = ViewManager.get_kernel_for_view(self.view.buffer_id())
         except KeyError:
-            view = get_parent_view(self.view)
+            view = self._get_parent_view()
             kernel = ViewManager.get_kernel_for_view(view.buffer_id())
 
         def cb():
@@ -850,6 +840,17 @@ class HeliumClearAllCells(TextCommand):
 
         # clear the old phantoms async
         sublime.set_timeout_async(cb, 0)
+
+    def _get_parent_view(self) -> sublime.View:
+        for view in sublime.active_window().views():
+            try:
+                kernel = ViewManager.get_kernel_for_view(view.buffer_id())
+            except KeyError:
+                continue
+
+            if kernel.get_view() == self.view:
+                return view
+        return None
 
 
 class StatusBar(object):
