@@ -1,47 +1,28 @@
-[tool.poetry]
+[project]
 name = "Helium"
-version = "0.6.0"
-description = "Let Sublime Text 3 talk with Jupyter."
-authors = ["Ben Felder <ben@felder.io>"]
-repository = "https://github.com/pykong/Helium"
+version = "0.6.4"
+description = "Let Sublime Text talk with Jupyter."
 readme = "README.md"
-keywords = ["sublime-text-3", "jupyter"]
 license = "GPL-2.0-only"
-exclude = []
 
-[tool.poetry.urls]
-"Bug Tracker" = "https://github.com/pykong/Helium/issues"
-
-[tool.poetry.dependencies]
-python = "^3.8"
-flake8-eradicate = "^0.2.4"
-pre-commit = "^2.0.1"
-
-[tool.poetry.dev-dependencies]
-black = {version = "^24.3", allow-prereleases = true}
-flake8 = "^3.7.9"
-flake8-blind-except = "^0.1.1"
-flake8-comprehensions = "^3.2.2"
-flake8-docstrings = "^1.5.0"
-isort = "^4.3.21"
-mypy = "^0.761"
-
-[tool.isort]
-line_length = 88
-combine_star = true
-known_third_party = []
-skip_glob = ["lib/client"]
+[dependency-groups]
+dev = [
+	"black",
+	"flake8",
+]
 
 [tool.black]
 line-length = 88
-target_version = ["py33"]
-exclude = "lib/client"
+target-version = ["py38"]
+exclude = '''
+/( \.git
+ | \.venv
+ | lib/client
+ | tests
+)/
+'''
 
-[build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
-
-[flake8]
-ignore = ",E203,D100,D101,D102,D103,D104,D105,D106,D107,D203,W503,"
-exclude = ",.git, .venv, lib/client,"
+[tool.flake8]
+ignore = "E203,D100,D101,D102,D103,D104,D105,D106,D107,D203,W503"
+exclude = ".git,.venv,lib/client,tests"
 max-line-length = 88
