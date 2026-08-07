@@ -321,20 +321,21 @@ class KernelConnection(object):
     @property
     def view_name(self):
         """Return name of output view."""
-        return "*Helium Output* {repr}".format(repr=self.repr)
+        return "Helium: {repr}".format(repr=self.repr)
 
     @property
     def repr(self):
         """Return string representation of the connection."""
+        shortened_kernel_id = str(self.kernel_id)[:6]
         if self.connection_name:
             return "{connection_name} ([{lang}] {kernel_id})".format(
                 connection_name=self.connection_name,
                 lang=self.lang,
-                kernel_id=self.kernel_id,
+                kernel_id=shortened_kernel_id,
             )
         else:
             return "[{lang}] {kernel_id}".format(
-                lang=self.lang, kernel_id=self.kernel_id
+                lang=self.lang, kernel_id=shortened_kernel_id
             )
 
     @property
@@ -351,7 +352,8 @@ class KernelConnection(object):
         current_view = sublime.active_window().active_view()
         sublime.active_window().focus_view(view)
         view.set_scratch(True)  # avoids prompting to save
-        view.settings().set("word_wrap", "false")
+        view.settings().set("gutter", False)
+        view.settings().set("line_numbers", False)
         sublime.active_window().focus_view(current_view)
 
     def _output_input_code(self, code, execution_count):
@@ -579,6 +581,8 @@ class KernelConnection(object):
             view = window.new_file()
             view.set_name(view_name)
             view.settings().set("syntax", "Packages/Helium/Helium.sublime-syntax")
+            view.settings().set("gutter", False)
+            view.settings().set("line_numbers", False)
             num_group = window.num_groups()
             if num_group != 1:
                 if active_group + 1 < num_group:

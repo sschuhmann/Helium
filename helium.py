@@ -842,15 +842,14 @@ class HeliumClearAllCells(TextCommand):
         sublime.set_timeout_async(cb, 0)
 
     def _get_parent_view(self) -> sublime.View:
-        for window in sublime.windows():
-            for view in window.views():
-                try:
-                    kernel = ViewManager.get_kernel_for_view(view.buffer_id())
-                except KeyError:
-                    continue
+        for view in sublime.active_window().views():
+            try:
+                kernel = ViewManager.get_kernel_for_view(view.buffer_id())
+            except KeyError:
+                continue
 
-                if kernel.get_view() == self.view:
-                    return view
+            if kernel.get_view() == self.view:
+                return view
         return None
 
 
